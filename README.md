@@ -1,1 +1,0 @@
-# Ditigal Image Processing Coursework

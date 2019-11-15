@@ -1,8 +1,0 @@
-certifi==2019.9.11
-numpy==1.17.4
-opencv-python==4.1.1.26
-Pillow==6.2.1
-pipenv==2018.11.26
-tqdm==4.38.0
-virtualenv==16.7.7
-virtualenv-clone==0.5.3
