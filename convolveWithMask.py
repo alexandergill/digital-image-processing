@@ -2,7 +2,7 @@ import math
 import numpy as np
 from tqdm import tqdm
 
-def convoleWithMask(inputArray, mask):
+def convolveWithMask(inputArray, mask):
 
     # check that mask is one- or two-dimensional
     if len(mask.shape) > 2:
@@ -31,13 +31,13 @@ def convoleWithMask(inputArray, mask):
     for i, row in enumerate(tqdm(inputArray[maskVerticalCentre:-maskVerticalCentre]),
                             start=maskVerticalCentre):
 
-        # loop over the columns in the same way
-        for j, _column in enumerate(row[maskHorizontalCentre:-maskHorizontalCentre],
+        # loop over the pixels in the same way
+        for j, _pixel in enumerate(row[maskHorizontalCentre:-maskHorizontalCentre],
                                     start=maskHorizontalCentre):
 
             # loop over the rows of the mask. 'start' is set so that
             # the index of the centre point is [0, 0]. For example, a
-            # 5x5 mask would start at -2, and go up to 2
+            # 5x5 mask would start at [-2, -2], and go up to [2, 2]
             for m, maskRow in enumerate(mask, start=(maskVerticalCentre - maskRows)):
                 for n, maskValue in enumerate(maskRow, start=(maskHorizontalCentre - maskColumns)):
 
@@ -46,3 +46,8 @@ def convoleWithMask(inputArray, mask):
                     outputArray[i, j] += inputArray[i + m, j + n] * maskValue
 
     return outputArray
+
+# fast convolution for testing purposes
+def fastConvolveWithMask(inputArray, mask):
+    from scipy import signal
+    return signal.convolve2d(inputArray, mask)
