@@ -4,8 +4,6 @@ from tqdm import tqdm
 
 def convoleWithMask(inputArray, mask):
 
-    print(mask)
-
     # check that mask is one- or two-dimensional
     if len(mask.shape) > 2:
         raise ValueError("mask has more than two dimensions")
@@ -25,16 +23,20 @@ def convoleWithMask(inputArray, mask):
     # create empty output array of same shape as input
     outputArray = np.zeros(inputArray.shape)
 
+    print('convolving with mask...')
+
     # loop over the rows in the image, ignoring half the mask at the
     # top and the bottom. 'tqdm' adds a progress bar. 'start' gives
     # the correct index within the loop.
-    for i, row in enumerate(tqdm(inputArray[maskVerticalCentre:-maskVerticalCentre]), start=maskVerticalCentre):
+    for i, row in enumerate(tqdm(inputArray[maskVerticalCentre:-maskVerticalCentre]),
+                            start=maskVerticalCentre):
 
         # loop over the columns in the same way
-        for j, column in enumerate(row[maskHorizontalCentre:-maskHorizontalCentre], start=maskHorizontalCentre):
+        for j, _column in enumerate(row[maskHorizontalCentre:-maskHorizontalCentre],
+                                    start=maskHorizontalCentre):
 
             # loop over the rows of the mask. 'start' is set so that
-            # the index of the centre point is 0, 0. For example, a
+            # the index of the centre point is [0, 0]. For example, a
             # 5x5 mask would start at -2, and go up to 2
             for m, maskRow in enumerate(mask, start=(maskVerticalCentre - maskRows)):
                 for n, maskValue in enumerate(maskRow, start=(maskHorizontalCentre - maskColumns)):
