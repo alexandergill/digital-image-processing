@@ -51,3 +51,48 @@ def convolveWithMask(inputArray, mask):
 def fastConvolveWithMask(inputArray, mask):
     from scipy import signal
     return signal.convolve2d(inputArray, mask)
+
+# median filter function
+def medianFilter(inputArray, maskSize):
+
+    # check that maskSize is odd
+    if maskSize % 2 == 0:
+        raise ValueError("mask size is not an odd number")
+
+    # check inputArray is valid
+    if inputArray is None:
+        raise ValueError("input array is not valid")
+
+    # get centre of mask (zero-indexed, so a 5x5 mask would have a centre 2)
+    maskCentre = math.ceil((maskSize-1)/2)
+
+    # create empty output array with same shape as input array
+    outputArray = np.zeros(inputArray.shape)
+
+    # -- populate the output array --
+    # loop over rows, ignoring half the mask at the top and bottom
+    # tqdm adds a progress bar
+    for i, row in enumerate(tqdm(inputArray[maskCentre:-maskCentre]),
+                            start=maskCentre):
+
+        # loop over the pixels in the row, ingoring half the mask
+        # at each end
+        for j, _pixel in enumerate(row[maskCentre:-maskCentre],
+                                   start=maskCentre):
+
+            # create empty mask
+            mask = np.zeros((maskSize,maskSize))
+
+            # -- fill mask --
+            # loop over mask in 2d, with [0,0] at the centre. For
+            # a 5x5 mask, this would loop from [-2,-2] to [2,2]
+            for m in range(-maskCentre,maskSize-maskCentre):
+                for n in range(-maskCentre,maskSize-maskCentre):
+
+                    # get the pixel value under each element of the mask
+                    mask[m+maskCentre,n+maskCentre] = inputArray[i+m,j+n]
+
+            # calculate the median and put it in the output array
+            outputArray[i,j] = np.median(mask)
+
+    return outputArray
