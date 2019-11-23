@@ -124,12 +124,17 @@ def crimmins(imageArray, iterations):
             for i, row in enumerate(imageArray[1:-1], start=1):
                 for j, pixel in enumerate(row[1:-1], start=1):
 
-                    # get value of previous pixel in this direction by subtracting the East 
-                    a = imageArray[tuple(np.subtract([i,j], direction))]
-                    
-                    # apply rule
-                    if a >= (pixel + 2):
-                        imageArray[i,j] += 1
+                    # exit iteration if this pixel is 255 - we don't
+                    # want to increment a pixel of maximum value
+                    if pixel < 255:
+
+                        # get value of previous pixel in this direction by
+                        # subtracting the East 
+                        a = imageArray[tuple(np.subtract([i,j], direction))]
+                        
+                        # apply rule
+                        if a >= (pixel + 2):
+                            imageArray[i,j] += 1
 
                 # update progress bar each row
                 pbar.update(stepSize)
@@ -138,15 +143,16 @@ def crimmins(imageArray, iterations):
             # loop over image as before
             for i, row in enumerate(imageArray[1:-1], start=1):
                 for j, pixel in enumerate(row[1:-1], start=1):
+                    if pixel < 255:
 
-                    # get values of previous and next pixels in this
-                    # direction
-                    a = imageArray[tuple(np.subtract([i,j], direction))]
-                    c = imageArray[tuple(np.add([i,j], direction))]
+                        # get values of previous and next pixels in this
+                        # direction
+                        a = imageArray[tuple(np.subtract([i,j], direction))]
+                        c = imageArray[tuple(np.add([i,j], direction))]
 
-                    # apply rule
-                    if a > pixel and pixel <= c:
-                        imageArray[i,j] += 1
+                        # apply rule
+                        if a > pixel and pixel <= c:
+                            imageArray[i,j] += 1
 
                 # update progress bar each row
                 pbar.update(stepSize)
@@ -155,32 +161,34 @@ def crimmins(imageArray, iterations):
             # loop as before
             for i, row in enumerate(imageArray[1:-1], start=1):
                 for j, pixel in enumerate(row[1:-1], start=1):
+                    if pixel < 255:
 
-                    # get a and c pixel values as before
-                    a = imageArray[tuple(np.subtract([i,j], direction))]
-                    c = imageArray[tuple(np.add([i,j], direction))]
+                        # get a and c pixel values as before
+                        a = imageArray[tuple(np.subtract([i,j], direction))]
+                        c = imageArray[tuple(np.add([i,j], direction))]
 
-                    # apply rule
-                    if c > pixel and pixel <= a:
-                        imageArray[i,j] += 1
+                        # apply rule
+                        if c > pixel and pixel <= a:
+                            imageArray[i,j] += 1
 
                 # update progress bar each row
                 pbar.update(stepSize)
-
+                
             #--- STEP 4: if c >= b+2 then increment b
             for i, row in enumerate(imageArray[1:-1], start=1):
                 for j, pixel in enumerate(row[1:-1], start=1):
+                    if pixel < 255:
 
-                    # get c as before
-                    c = imageArray[tuple(np.add([i,j], direction))]
+                        # get c as before
+                        c = imageArray[tuple(np.add([i,j], direction))]
 
-                    # apply rule
-                    if c >= (pixel + 2):
-                        imageArray[i,j] += 1
+                        # apply rule
+                        if c >= (pixel + 2):
+                            imageArray[i,j] += 1
 
                 # update progress bar each row
                 pbar.update(stepSize)
-
+                
         #--- light pixel adjustment
         # loop over the directions specified
         for direction in directions:
@@ -190,12 +198,16 @@ def crimmins(imageArray, iterations):
             for i, row in enumerate(imageArray[1:-1], start=1):
                 for j, pixel in enumerate(row[1:-1], start=1):
 
-                    # get a value
-                    a = imageArray[tuple(np.subtract([i,j], direction))]
+                    # exit this iteration if the pixel value is zero,
+                    # because we don't want to decrement a pixel of 0 value
+                    if pixel > 0:
 
-                    # apply rule
-                    if a <= (pixel-2):
-                        imageArray[i,j] -= 1
+                        # get a value
+                        a = imageArray[tuple(np.subtract([i,j], direction))]
+
+                        # apply rule
+                        if a <= (pixel-2):
+                            imageArray[i,j] -= 1
 
                 # update progress bar each row
                 pbar.update(stepSize)
@@ -203,29 +215,31 @@ def crimmins(imageArray, iterations):
             #--- STEP 2: if a < b and b >= c then decrement b
             for i, row in enumerate(imageArray[1:-1], start=1):
                 for j, pixel in enumerate(row[1:-1], start=1):
+                    if pixel > 0:
 
-                    # get a and c
-                    a = imageArray[tuple(np.subtract([i,j], direction))]
-                    c = imageArray[tuple(np.add([i,j], direction))]
+                        # get a and c
+                        a = imageArray[tuple(np.subtract([i,j], direction))]
+                        c = imageArray[tuple(np.add([i,j], direction))]
 
-                    # apply rule
-                    if a < pixel and pixel >= c:
-                        imageArray[i,j] -= 1
+                        # apply rule
+                        if a < pixel and pixel >= c:
+                            imageArray[i,j] -= 1
 
                 # update progress bar each row
                 pbar.update(stepSize)
 
             #--- STEP 3: if c < b and b >= a then decrement b
             for i, row in enumerate(imageArray[1:-1], start=1):
-                for j, row in enumerate(row[1:-1], start=1):
+                for j, pixel in enumerate(row[1:-1], start=1):
+                    if pixel > 0:
 
-                    # get a and c
-                    a = imageArray[tuple(np.subtract([i,j], direction))]
-                    c = imageArray[tuple(np.add([i,j], direction))]
+                        # get a and c
+                        a = imageArray[tuple(np.subtract([i,j], direction))]
+                        c = imageArray[tuple(np.add([i,j], direction))]
 
-                    # apply rule
-                    if c < pixel and pixel >= a:
-                        imageArray[i,j] -= 1
+                        # apply rule
+                        if c < pixel and pixel >= a:
+                            imageArray[i,j] -= 1
 
                 # update progress bar each row
                 pbar.update(stepSize)
@@ -233,13 +247,14 @@ def crimmins(imageArray, iterations):
             #--- STEP 4: if c <= b-2 then decrement b
             for i, row in enumerate(imageArray[1:-1], start=1):
                 for j, pixel in enumerate(row[1:-1], start=1):
+                    if pixel > 0:
 
-                    # get c value as before
-                    c = imageArray[tuple(np.add([i,j], direction))]
+                        # get c value as before
+                        c = imageArray[tuple(np.add([i,j], direction))]
 
-                    # apply rule
-                    if c <= (pixel-2):
-                        imageArray[i,j] -= 1
+                        # apply rule
+                        if c <= (pixel-2):
+                            imageArray[i,j] -= 1
 
                 # update progress bar each row
                 pbar.update(stepSize)
