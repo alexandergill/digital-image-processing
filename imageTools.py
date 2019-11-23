@@ -113,7 +113,7 @@ def crimmins(imageArray, iterations):
                     * 8) # 8 steps per iteration
 
     # loop for number of iterations
-    for iteration in range(iterations):
+    for _ in range(iterations):
 
         #--- dark pixel adjustment ---
         # loop over the directions specified
