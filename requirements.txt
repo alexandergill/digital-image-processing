@@ -3,7 +3,7 @@ certifi==2019.9.11
 isort==4.3.21
 lazy-object-proxy==1.4.3
 mccabe==0.6.1
-numpy==1.17.4
+numpy==1.22.0
 opencv-python==4.1.1.26
 Pillow==7.1.0
 pipenv==2018.11.26
